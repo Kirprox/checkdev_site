@@ -243,3 +243,47 @@ docker run -p 9015:9015 checkdev-site
 2. **Test** — прогон юнит-тестов
 3. **Package** — создание артефакта
 4. **Deploy** — публикация (в Docker или Kubernetes)
+## Запуск проекта через Docker desktop
+Перед началом убедитесь, что у вас установлены:
+
+Docker Desktop
+### Клонирование проекта
+Проект состоит из нескольких сервисов (каждый в отдельном репозитории).
+Необходимо скачать все части проекта в одну папку.
+
+
+### Подготовка структуры проекта
+#### Файл docker-compose.yml находится в репозитории checkdev_auth.
+Необходимо: переместить его в корень проекта (checkdev/)
+
+Итоговая структура:
+```
+checkdev/
+├── docker-compose.yml   ← ВАЖНО (должен быть здесь)
+├── checkdev_auth/
+├── checkdev_eureka/
+├── checkdev_generator/
+├── checkdev_mock/
+├── checkdev_desc/
+├── checkdev_site/
+├── checkdev_notification/
+```
+### Сборка и запуск
+
+Перейдите в корень проекта
+
+#### Соберите и запустите контейнеры:
+
+docker compose build
+
+docker compose up
+
+#### перейдите по http://localhost:8080
+
+
+### Важно
+
+Если проект не запустится, необходимо будет вручную запустить контейнеры, сначала все базы данных,
+затем сервисы в следующем порядке:
+
+auth->eureka->generator->mock->desc->site->notification
