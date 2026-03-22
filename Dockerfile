@@ -1,11 +1,15 @@
-FROM maven:3.9.6-eclipse-temurin-17
+FROM maven:3.9.6-eclipse-temurin-17 as maven
 
-RUN mkdir checkdev_site
+WORKDIR /app
 
-WORKDIR checkdev_site
+COPY . /app
 
-COPY . .
+RUN mvn package
 
-RUN mvn package -Dmaven.test.skip=true
+FROM eclipse-temurin:17-jdk
 
-CMD ["sh", "-c", "sleep ${START_DELAY:-0} && java -jar target/site-1.0.0.jar"]
+WORKDIR /app
+
+COPY --from=maven /app/target/site-1.0.0.jar app.jar
+
+CMD ["sh", "-c", "sleep ${START_DELAY:-8} && java -jar app.jar"]
